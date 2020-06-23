@@ -590,15 +590,15 @@ for depid in ` ps aux | grep $(whoami) | grep -Ev "grep|aux|root" | grep de2 | a
 
 while [[ $DEVERSION = "" ]]; do
     echo -ne "${bold}${yellow}请输入你要安装的第二个 Deluge 的版本 : ${normal}" ; read -e DEVERSION
-    wget $quietflag -O $HOME/deluge-$DEVERSION.tar.gz http://download.deluge-torrent.org/source/2.0/deluge-$DEVERSION.tar.gz || { echo -e "${error} 下载 Deluge 源码失败，可能是这个版本不可用！" ; unset DEVERSION ; }
+    wget $quietflag -O $HOME/deluge-$DEVERSION.tar.xz http://download.deluge-torrent.org/source/2.0/deluge-$DEVERSION.tar.xz || { echo -e "${error} 下载 Deluge 源码失败，可能是这个版本不可用！" ; unset DEVERSION ; }
 done
 
 # 安装
-tar zxf $HOME/deluge-$DEVERSION.tar.gz && cd $HOME/deluge-$DEVERSION
+tar zxf $HOME/deluge-$DEVERSION.tar.xz && cd $HOME/deluge-$DEVERSION
 sed -i "s/SSL.SSLv3_METHOD/SSL.SSLv23_METHOD/g" deluge/core/rpcserver.py
 sed -i "/        ctx = SSL.Context(SSL.SSLv23_METHOD)/a\        ctx.set_options(SSL.OP_NO_SSLv2 & SSL.OP_NO_SSLv3)" deluge/core/rpcserver.py
 python setup.py install --user >/dev/null 2>&1
-cd && rm -rf $HOME/deluge-"${DEVERSION}" $HOME/deluge-"${DEVERSION}".tar.gz
+cd && rm -rf $HOME/deluge-"${DEVERSION}" $HOME/deluge-"${DEVERSION}".tar.xz
 
 rm -f $HOME/bin/{de2,dew2} >/dev/null 2>&1
 mv -f $HOME/.local/bin/deluged $HOME/bin/de2 >/dev/null 2>&1
